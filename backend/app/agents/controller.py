@@ -7,7 +7,7 @@ from app.utils.logging_utils import append_raw_log
 logger = logging.getLogger(__name__)
 
 # Print for debugging
-print("🔑 GROQ_API_KEY (from env at controller):", os.getenv("GROQ_API_KEY"))
+# print("🔑 GROQ_API_KEY (from env at controller):", os.getenv("GROQ_API_KEY"))
 
 GROQ_KEY = os.getenv("GROQ_API_KEY")
 
