@@ -4,6 +4,7 @@ Deployed Link: [Multi-Agent System Deployment](https://multi-agent-system-fronte
 
 A sophisticated multi-agent AI system that intelligently routes user queries to specialized agents for optimal answers. The system combines PDF processing, academic research, and web search capabilities with intelligent routing powered by Groq LLM.
 
+<!-- 
 
 ## 🏢 Project Structure
 
@@ -221,7 +222,8 @@ MAX_UPLOAD_MB=10
 LOG_FILE=logs/decision_logs.jsonl
 FASTAPI_HOST=0.0.0.0
 FASTAPI_PORT=8000
-```
+``` 
+-->
 
 <!-- ## 🔗 API Documentation
 
@@ -296,7 +298,7 @@ Response:
 - `GET /upload/list` - List all uploaded documents
 - `DELETE /upload/{doc_id}` - Delete uploaded document
 - `GET /logs/` - View system decision logs
-- `DELETE /upload/clear-failed` - Clear failed uploads -->
+- `DELETE /upload/clear-failed` - Clear failed uploads 
 
 ## 🎯 Usage Examples
 
@@ -343,3 +345,4 @@ Live Demo
 MIT License - see [LICENSE](LICENSE) file for details.
 
 **Made by [ayushchaware08](https://github.com/ayushchaware08)**
+-->
