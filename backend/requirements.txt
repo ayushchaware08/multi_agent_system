@@ -3,27 +3,24 @@ fastapi>=0.115.0
 uvicorn>=0.30.1
 
 # === LLM + Agents ===
-langchain==0.3.4
-langchain-core==0.3.13
-langchain-community==0.3.3
+langchain>=0.3.0
 langchain-groq>=0.1.9
+langchain-community>=0.3.0
 
 # === Vector Store + Embeddings ===
 sentence-transformers>=2.7.0
-huggingface-hub==0.23.0
-transformers==4.41.0
 faiss-cpu>=1.8.0
 
 # === PDF Processing ===
-PyMuPDF>=1.24.9
+PyMuPDF>=1.24.0
 
-# === Search + Research Tools ===
+# === Search Tools ===
 serpapi>=0.1.5
-arxiv>=2.1.3
+arxiv>=2.1.0
 google-search-results
 
 # === Utilities ===
-pydantic>=2.9.2
-python-dotenv>=1.0.1
-requests>=2.32.3
+pydantic>=2.9.0
+python-dotenv>=1.0.0
+requests>=2.32.0
 python-multipart
