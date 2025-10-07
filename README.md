@@ -67,6 +67,8 @@ multi_agent_system/
   - Batch processing for large documents (prevents hanging)
   - Vector similarity search with metadata filtering
   - Document-specific or global PDF search
+![alt text](<Screenshot 2025-10-08 031425.png>)
+
 
 #### 2. ArXiv Research Agent 📚
 - **Purpose**: Find and analyze recent academic papers
@@ -77,6 +79,7 @@ multi_agent_system/
   - Comprehensive paper analysis with structured output
   - Research trend identification
   - Direct ArXiv links and paper recommendations
+![alt text](<Screenshot 2025-10-07 190422.png>)
 
 #### 3. Web Search Agent 🌐
 - **Purpose**: Current information and general web queries
@@ -86,6 +89,7 @@ multi_agent_system/
   - Multi-source information synthesis
   - Structured answer generation
   - Source attribution and transparency
+![alt text](<Screenshot 2025-10-07 190246.png>)
 
 ## 🚀 Quick Start
 
