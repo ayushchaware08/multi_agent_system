@@ -31,7 +31,7 @@ class Controller:
             max_retries=2
         )
         
-        logger.info("✅ Controller initialized successfully")
+        # logger.info("✅ Controller initialized successfully")
 
     def decide(self, text, pdf_doc_id=None, prefer_agent=None):
         """Decide which agent to use based on the query"""
@@ -41,11 +41,11 @@ class Controller:
         t = text.lower().strip()
 
         # Auto-route to PDF_RAG if documents exist
-        from app.agents.pdf_rag import _vectorstore
-        if _vectorstore is not None and _vectorstore.index.ntotal > 0:
-            doc_count = _vectorstore.index.ntotal
-            logger.info(f"📚 {doc_count} chunks in FAISS - auto-routing to PDF_RAG")
-            return "PDF_RAG", f"PDF document available ({doc_count} chunks). Answering from uploaded PDF."
+        # from app.agents.pdf_rag import _vectorstore
+        # if _vectorstore is not None and _vectorstore.index.ntotal > 0:
+        #     doc_count = _vectorstore.index.ntotal
+        #     logger.info(f"📚 {doc_count} chunks in FAISS - auto-routing to PDF_RAG")
+        #     return "PDF_RAG", f"PDF document available ({doc_count} chunks). Answering from uploaded PDF."
 
         
         # User preference override

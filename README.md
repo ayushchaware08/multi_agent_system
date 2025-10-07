@@ -1,5 +1,7 @@
  # Multi-Agent System 🤖
 
+Deployed Link: [Multi-Agent System Deployment](https://multi-agent-system-frontend.onrender.com)
+
 A sophisticated multi-agent AI system that intelligently routes user queries to specialized agents for optimal answers. The system combines PDF processing, academic research, and web search capabilities with intelligent routing powered by Groq LLM.
 
 
@@ -34,6 +36,8 @@ multi_agent_system/
 │   └── decision_logs.jsonl     # Agent routing decisions
 └── README.md                   # This file
 ```
+## 🏗️ System Architecture
+![alt text](other/diagram-export-10-8-2025-3_42_20-AM.png)
 
 ## 🛠️ Technical Details
 
@@ -42,7 +46,7 @@ multi_agent_system/
 - **Backend Framework**: FastAPI (async/await, automatic OpenAPI docs)
 - **Frontend**: Streamlit (rapid prototyping, file uploads)
 - **LLM**: Groq (fast inference, multiple models)
-- **Vector Database**: ChromaDB (persistent storage, similarity search)
+- **Vector Database**: FAISS
 - **Embeddings**: HuggingFace Transformers (local, no API costs)
 - **PDF Processing**: PyMuPDF (fast, reliable text extraction)
 - **Web Search**: SerpAPI (Google Search API)
@@ -67,7 +71,7 @@ multi_agent_system/
   - Batch processing for large documents (prevents hanging)
   - Vector similarity search with metadata filtering
   - Document-specific or global PDF search
-![alt text](<Screenshot 2025-10-08 031425.png>)
+![alt text](</other/Screenshot 2025-10-08 031425.png>)
 
 
 #### 2. ArXiv Research Agent 📚
@@ -79,7 +83,7 @@ multi_agent_system/
   - Comprehensive paper analysis with structured output
   - Research trend identification
   - Direct ArXiv links and paper recommendations
-![alt text](<Screenshot 2025-10-07 190422.png>)
+![alt text](</other/Screenshot 2025-10-07 190422.png>)
 
 #### 3. Web Search Agent 🌐
 - **Purpose**: Current information and general web queries
@@ -89,7 +93,65 @@ multi_agent_system/
   - Multi-source information synthesis
   - Structured answer generation
   - Source attribution and transparency
-![alt text](<Screenshot 2025-10-07 190246.png>)
+![alt text](</other/Screenshot 2025-10-07 190246.png>)
+
+## 🔗 API Documentation
+
+The system exposes a RESTful API with the following key endpoints:
+
+### Core Endpoints
+
+#### 1. Query Processing
+**POST** `/ask/` - Process user queries and route to appropriate agents
+
+Sample Request:
+```json
+{
+    "text": "What are recent developments in AI safety?",
+    "pdf_doc_id": "upload_1703123456",
+    "prefer_agent": "ARXIV"
+}
+```
+
+Sample Response:
+```json
+{
+    "answer": "Recent developments in AI safety include constitutional AI methods, RLHF improvements, and robustness testing frameworks...",
+    "agents_used": "ARXIV",
+    "rationale": "User asked about recent papers in AI safety",
+    "trace": {
+        "papers": ["Paper 1", "Paper 2"],
+        "query": "AI safety developments 2024",
+        "llm_duration": 2.34
+    }
+}
+```
+
+#### 2. PDF Upload & Processing  
+**POST** `/upload/` - Upload PDF documents for processing
+
+Sample Response:
+```json
+{
+    "status": "accepted",
+    "doc_id": "upload_1703123456", 
+    "filename": "research_paper.pdf",
+    "check_status": "/upload/status/upload_1703123456"
+}
+```
+
+#### 3. Upload Status Check
+**GET** `/upload/status/{doc_id}` - Check processing status
+
+Sample Response:
+```json
+{
+    "status": "completed",
+    "message": "Successfully ingested 45 chunks",
+    "chunks_count": 45,
+    "completed_at": 1703123456
+}
+```
 
 ## 🚀 Quick Start
 
@@ -129,6 +191,22 @@ multi_agent_system/
 5. **Create required directories**
    ```bash
    mkdir -p data/uploads data/vectorstore logs
+   ```
+
+### Running the System
+
+#### Option 1: Full System (Recommended)
+
+1. **Start Backend**
+   ```bash
+   cd backend
+   uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+   ```
+
+2. **Start Frontend** (New terminal)
+   ```bash
+   cd frontend
+   streamlit run streamlit_app.py
    ```
 
 ## 📝 Environment Configuration
@@ -224,7 +302,7 @@ Response:
 
 ### 1. Academic Research
 ```
-Query: "recent papers on transformer architectures in 2024"
+Query: "recent papers on transformer architectures in 2025"
 → Routes to ArXiv Agent
 → Returns: Latest papers with analysis and recommendations
 ```
@@ -251,4 +329,17 @@ Query: "Compare recent AI safety papers with regulations mentioned in my uploade
 → Returns: Comprehensive analysis from multiple sources
 ```
 
-**Made  by [ayushchaware08](https://github.com/ayushchaware08)**
+## 🚀 Deployment
+Production Deployment on Render
+This application is deployed on Render with separate services for backend and frontend.
+
+Live Demo
+- Backend API: https://multi-agent-backend-n3bp.onrender.com
+- Frontend UI: https://multi-agent-system-frontend.onrender.com
+
+
+## 📄 License
+
+MIT License - see [LICENSE](LICENSE) file for details.
+
+**Made by [ayushchaware08](https://github.com/ayushchaware08)**
