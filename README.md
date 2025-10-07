@@ -1,4 +1,5 @@
-# multi_agent_system
+ # multi_agent_system
+<!--
 ```
 multi_agent_system/
 ├── backend/
@@ -21,7 +22,6 @@ multi_agent_system/
 │   │   │   ├── backoff_utils.py
 │   │   │   └── security.py
 │   ├── requirements.txt
-│   └── Dockerfile
 │
 ├── frontend/
 │   └── streamlit_app.py
@@ -33,4 +33,4 @@ multi_agent_system/
 │   └── decision_logs.jsonl
 │
 └── README.md
-```
+``` -->
