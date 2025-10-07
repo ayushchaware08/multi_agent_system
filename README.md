@@ -56,45 +56,7 @@ multi_agent_system/
 4. **Connection Pooling**: Efficient database connections
 5. **Retry Mechanisms**: Robust error handling with exponential backoff
 
-## 🏗️ Architecture Overview
-
-### System Components
-
-```
-┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
-│   Frontend      │───▶│    Backend       │───▶│   External      │
-│   (Streamlit)   │    │   (FastAPI)      │    │   Services      │
-└─────────────────┘    └──────────────────┘    └─────────────────┘
-                              │
-                              ▼
-                    ┌─────────────────┐
-                    │   Controller    │
-                    │   (Groq LLM)    │
-                    └─────────────────┘
-                              │
-            ┌─────────────────┼─────────────────┐
-            ▼                 ▼                 ▼
-    ┌──────────────┐  ┌──────────────┐  ┌──────────────┐
-    │  PDF RAG     │  │  ArXiv       │  │  Web Search  │
-    │  Agent       │  │  Agent       │  │  Agent       │
-    └──────────────┘  └──────────────┘  └──────────────┘
-            │                 │                 │
-            ▼                 ▼                 ▼
-    ┌──────────────┐  ┌──────────────┐  ┌──────────────┐
-    │  ChromaDB    │  │  ArXiv API   │  │  SerpAPI     │
-    │  Vector DB   │  │              │  │  (Google)    │
-    └──────────────┘  └──────────────┘  └──────────────┘
-```
-
-### 🧠 Intelligent Agent Routing
-
-The system employs a **Controller Agent** powered by Groq's LLM that intelligently routes queries to the most appropriate specialized agent:
-
-1. **Rule-Based Routing** (Fast): Pre-defined patterns for common query types
-2. **LLM-Based Routing** (Smart): Advanced decision making for complex queries
-3. **User Preference Override**: Manual agent selection when needed
-
-### 🔧 Core Agents
+## 🔧 Core Agents
 
 #### 1. PDF RAG Agent 📄
 - **Purpose**: Answer questions about uploaded PDF documents
@@ -165,56 +127,21 @@ The system employs a **Controller Agent** powered by Groq's LLM that intelligent
    mkdir -p data/uploads data/vectorstore logs
    ```
 
-### Running the System
-
-#### Option 1: Full System (Recommended)
-
-1. **Start Backend**
-   ```bash
-   cd backend
-   uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
-   ```
-
-2. **Start Frontend** (New terminal)
-   ```bash
-   cd frontend
-   streamlit run streamlit_app.py
-   ```
-
-3. **Access the application**
-   - Frontend: http://localhost:8501
-   - Backend API: http://localhost:8000
-   - API Docs: http://localhost:8000/docs
-
-#### Option 2: API Only
-```bash
-cd backend
-uvicorn app.main:app --host 0.0.0.0 --port 8000
-```
-
 ## 📝 Environment Configuration
 
 Create a `.env` file in the `backend` directory:
 
 ```bash
-# Required
 GROQ_API_KEY=your_groq_api_key_here
-
-# Optional but recommended
 SERPAPI_API_KEY=your_serpapi_key_here
-
-# System Configuration
 CHROMA_DB_DIR=data/vectorstore
 MAX_UPLOAD_MB=10
 LOG_FILE=logs/decision_logs.jsonl
 FASTAPI_HOST=0.0.0.0
 FASTAPI_PORT=8000
-
-# Optional
-ARXIV_API_EMAIL=your_email@example.com
 ```
 
-## 🔗 API Documentation
+<!-- ## 🔗 API Documentation
 
 ### Core Endpoints
 
@@ -280,14 +207,14 @@ Response:
   "status": "healthy",
   "embedding_model": "loaded"
 }
-```
+``` -->
 
-### Additional Endpoints
+<!-- ### Additional Endpoints
 
 - `GET /upload/list` - List all uploaded documents
 - `DELETE /upload/{doc_id}` - Delete uploaded document
 - `GET /logs/` - View system decision logs
-- `DELETE /upload/clear-failed` - Clear failed uploads
+- `DELETE /upload/clear-failed` - Clear failed uploads -->
 
 ## 🎯 Usage Examples
 
@@ -319,232 +246,5 @@ Query: "Compare recent AI safety papers with regulations mentioned in my uploade
 → Controller intelligently routes to multiple agents
 → Returns: Comprehensive analysis from multiple sources
 ```
-## 🔧 Advanced Configuration
 
-### Custom Model Configuration
-
-The system supports various Groq models. Update in your agents:
-
-```python
-# In agents/*.py files
-ChatGroq(
-    api_key=GROQ_KEY,
-    model="llama-3.3-70b-versatile",  # Options: llama-3.1-70b-versatile, mixtral-8x7b-32768
-    temperature=0.3,
-    max_tokens=2048,
-    timeout=60.0
-)
-```
-
-### Vector Database Tuning
-
-ChromaDB settings in `pdf_rag.py`:
-
-```python
-# Retrieval settings
-search_kwargs = {
-    "k": 5,  # Number of similar chunks to retrieve
-    "filter": {"doc_id": doc_id}  # Filter by document
-}
-
-# Chunking settings
-RecursiveCharacterTextSplitter(
-    chunk_size=500,      # Characters per chunk
-    chunk_overlap=50,    # Overlap between chunks
-    length_function=len
-)
-```
-
-## 🚀 Deployment
-
-### Docker Deployment (Recommended)
-
-1. Create `Dockerfile`:
-```dockerfile
-FROM python:3.9-slim
-
-WORKDIR /app
-COPY backend/requirements.txt .
-RUN pip install -r requirements.txt
-
-COPY backend/ .
-EXPOSE 8000
-
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
-```
-
-2. Create `docker-compose.yml`:
-```yaml
-version: '3.8'
-services:
-  backend:
-    build: .
-    ports:
-      - "8000:8000"
-    volumes:
-      - ./data:/app/data
-      - ./logs:/app/logs
-    environment:
-      - GROQ_API_KEY=${GROQ_API_KEY}
-      - SERPAPI_API_KEY=${SERPAPI_API_KEY}
-
-  frontend:
-    build:
-      context: .
-      dockerfile: frontend/Dockerfile
-    ports:
-      - "8501:8501"
-    depends_on:
-      - backend
-    environment:
-      - API_ROOT=http://backend:8000
-```
-
-### Cloud Deployment Options
-
-#### 1. AWS EC2/ECS
-- Use the Docker setup above
-- Configure environment variables in ECS task definitions
-- Set up persistent storage for ChromaDB data
-
-#### 2. Google Cloud Run
-```bash
-# Build and deploy
-gcloud builds submit --tag gcr.io/PROJECT_ID/multi-agent-system
-gcloud run deploy --image gcr.io/PROJECT_ID/multi-agent-system --platform managed
-```
-
-#### 3. Heroku
-```bash
-# Add Procfile
-echo "web: uvicorn app.main:app --host=0.0.0.0 --port=\$PORT" > Procfile
-
-# Deploy
-git add .
-git commit -m "Initial deployment"
-git push heroku main
-```
-
-## 🐛 Troubleshooting
-
-### Common Issues
-
-#### 1. Import Errors
-```bash
-# Fix transformers/sentence-transformers conflicts
-pip uninstall sentence-transformers transformers torch -y
-pip install sentence-transformers==2.7.0 transformers==4.41.0
-```
-
-#### 2. ChromaDB Issues
-```bash
-# Clear ChromaDB data
-rm -rf data/vectorstore/*
-
-# Restart with fresh database
-```
-
-#### 3. Memory Issues
-```python
-# Reduce batch size in pdf_rag.py
-batch_size = 5  # Instead of 10
-
-# Reduce embedding dimensions
-dimension = 256  # Instead of 384
-```
-
-#### 4. API Timeouts
-```python
-# Increase timeout in agents
-timeout=120.0  # Instead of 60.0
-```
-
-### Debug Mode
-
-Enable debug logging:
-
-```python
-# In main.py
-logging.basicConfig(level=logging.DEBUG)
-```
-
-## 📊 Monitoring & Analytics
-
-### Decision Logs
-The system logs all routing decisions to `logs/decision_logs.jsonl`:
-
-```json
-{
-  "timestamp": 1703123456,
-  "decision": "ARXIV",
-  "rationale": "User asked about recent papers",
-  "input": "latest AI developments",
-  "trace": {...}
-}
-```
-
-### Health Monitoring
-- `/health` endpoint for system status
-- Embedding model loading verification
-- API key validation
-
-### Performance Metrics
-Access via `/logs/` endpoint:
-- Query processing times
-- Agent routing statistics
-- Error rates and types
-
-## 🤝 Contributing
-
-### Development Setup
-
-1. Fork the repository
-2. Create a feature branch: `git checkout -b feature-name`
-3. Make changes and test thoroughly
-4. Submit a pull request
-
-### Adding New Agents
-
-1. Create agent file in `backend/app/agents/`
-2. Implement the main function following the pattern:
-   ```python
-   def run_new_agent(query):
-       # Agent logic here
-       return answer, trace
-   ```
-3. Add routing logic in `controller.py`
-4. Register in `ask.py` API endpoint
-
-### Code Style
-- Follow PEP 8 for Python code
-- Use type hints where possible
-- Add comprehensive docstrings
-- Include error handling
-
-## 📄 License
-
-MIT License - see [LICENSE](LICENSE) file for details.
-
-## 🔗 Links & Resources
-
-- [Groq API Documentation](https://console.groq.com/docs)
-- [SerpAPI Documentation](https://serpapi.com/docs)
-- [ChromaDB Documentation](https://docs.trychroma.com/)
-- [FastAPI Documentation](https://fastapi.tiangolo.com/)
-- [Streamlit Documentation](https://docs.streamlit.io/)
-
-## 🆘 Support
-
-For issues and questions:
-
-1. Check the [Troubleshooting](#-troubleshooting) section
-2. Search existing [GitHub Issues](https://github.com/ayushchaware08/multi_agent_system/issues)
-3. Create a new issue with:
-   - System information
-   - Error messages
-   - Steps to reproduce
-   - Expected vs actual behavior
-
----
-
-**Made with ❤️ by [ayushchaware08](https://github.com/ayushchaware08)**
+**Made  by [ayushchaware08](https://github.com/ayushchaware08)**
