@@ -2,17 +2,38 @@ from langchain.chains import RetrievalQA
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.schema import Document
 from langchain_groq.chat_models import ChatGroq
-from langchain_community.vectorstores import Chroma
-from langchain_community.embeddings import HuggingFaceEmbeddings
+from langchain_chroma import Chroma
+from langchain_huggingface import HuggingFaceEmbeddings
+import logging
+import time
 import fitz  # PyMuPDF
 import os, time
 
+logger = logging.getLogger(__name__)
+
+
+
 CHROMA_DIR = os.getenv("CHROMA_DB_DIR", "data/vectorstore")
 GROQ_KEY = os.getenv("GROQ_API_KEY")
+MODEL = os.getenv("GROQ_MODEL")  # Default model
 
 def get_embeddings():
-    """Get HuggingFace embeddings model"""
-    return HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
+    """Get faster HuggingFace embeddings model"""
+    logger.info("🔄 Loading embedding model...")
+    from langchain_huggingface import HuggingFaceEmbeddings
+    
+    # Option 1: Smaller, faster model (50% faster)
+    embeddings = HuggingFaceEmbeddings(
+        model_name="sentence-transformers/all-MiniLM-L12-v2"  # Slightly larger but faster
+    )
+    
+    # Option 2: Even faster (70% faster, slightly lower quality)
+    # embeddings = HuggingFaceEmbeddings(
+    #     model_name="sentence-transformers/paraphrase-MiniLM-L3-v2"
+    # )
+    
+    logger.info("✅ Embedding model loaded")
+    return embeddings
 
 def extract_text_from_pdf(pdf_path):
     """Extract text from PDF using PyMuPDF"""
@@ -26,7 +47,7 @@ def extract_text_from_pdf(pdf_path):
 def chunk_text(text, doc_id):
     """Break text into chunks and create Document objects"""
     text_splitter = RecursiveCharacterTextSplitter(
-        chunk_size=1000,
+        chunk_size=500,
         chunk_overlap=200,
         length_function=len
     )
@@ -48,7 +69,7 @@ def chunk_text(text, doc_id):
     return documents
 
 def ingest_pdf_to_chroma(pdf_path, doc_id):
-    """Complete PDF ingestion pipeline: extract -> chunk -> embed -> store"""
+    """Complete PDF ingestion pipeline: extract -> chunk -> embed -> storet"""
     try:
         # Extract text from PDF
         text = extract_text_from_pdf(pdf_path)
@@ -61,11 +82,14 @@ def ingest_pdf_to_chroma(pdf_path, doc_id):
         
         # Get embeddings and vectorstore
         embeddings = get_embeddings()
-        vectorstore = Chroma(persist_directory=CHROMA_DIR, embedding_function=embeddings)
-        
+        vectorstore = Chroma(
+            collection_name="pdf_documents",  # Add collection name
+            embedding_function=embeddings,
+            persist_directory=CHROMA_DIR
+        )
         # Add documents to vectorstore
         vectorstore.add_documents(documents)
-        vectorstore.persist()
+        # vectorstore.persist()
         
         return {
             "status": "success", 
@@ -76,10 +100,56 @@ def ingest_pdf_to_chroma(pdf_path, doc_id):
     except Exception as e:
         return {"status": "error", "message": f"Ingestion failed: {str(e)}"}
 
+def run_pdf_rag_query(query, doc_id=None):
+    """Run RAG query against ingested PDFs"""
+    try:
+        logger.info(f"🔍 Starting RAG query: '{query}' for doc_id: {doc_id}")
+        
+        logger.info("📚 Initializing RAG chain...")
+        chain = get_rag_chain(doc_id)
+        logger.info("✅ RAG chain initialized")
+        
+        logger.info("🤖 Running query through LLM...")
+        start = time.time()
+        response = chain.invoke({"query": query})
+        duration = time.time() - start
+        logger.info(f"✅ Query completed in {duration:.2f}s")
+        
+        # Extract answer and source documents
+        answer = response["result"]
+        source_docs = response.get("source_documents", [])
+        
+        # Build trace with retrieved document info
+        retrieved_docs = []
+        for doc in source_docs:
+            retrieved_docs.append({
+                "doc_id": doc.metadata.get("doc_id"),
+                "chunk_id": doc.metadata.get("chunk_id"),
+                "content_preview": doc.page_content[:100] + "..."
+            })
+        
+        trace = {
+            "retrieved_docs": retrieved_docs,
+            "duration": duration,
+            "retriever_filter": {"doc_id": doc_id} if doc_id else "all_docs"
+        }
+        
+        return answer, trace
+        
+    except Exception as e:
+        logger.error(f"❌ RAG query failed: {str(e)}")
+        return f"RAG query failed: {str(e)}", {"error": str(e)}
+
+
 def get_rag_chain(doc_id=None):
     """Get RAG chain for querying, optionally filtered by doc_id"""
     embeddings = get_embeddings()
-    vectorstore = Chroma(persist_directory=CHROMA_DIR, embedding_function=embeddings)
+    vectorstore = Chroma(
+        collection_name="pdf_documents",  # MUST match the collection name used in ingest
+        embedding_function=embeddings,
+        persist_directory=CHROMA_DIR
+    )
+
     
     # Configure retriever with optional filtering
     search_kwargs = {"k": 5}
@@ -92,7 +162,15 @@ def get_rag_chain(doc_id=None):
     if not GROQ_KEY:
         raise ValueError("GROQ_API_KEY environment variable is required")
     
-    llm = ChatGroq(api_key=GROQ_KEY, temperature=0)
+    llm = ChatGroq(
+        api_key=GROQ_KEY,
+        model="llama-3.3-70b-versatile",  # CRITICAL: Must specify model
+        temperature=0,
+        max_tokens=2048,
+        timeout=60.0,
+        max_retries=2
+    )
+
     
     chain = RetrievalQA.from_chain_type(
         llm=llm, 
@@ -100,6 +178,7 @@ def get_rag_chain(doc_id=None):
         return_source_documents=True
     )
     return chain
+
 
 def run_pdf_rag_query(query, doc_id=None):
     """Run RAG query against ingested PDFs"""
@@ -133,3 +212,4 @@ def run_pdf_rag_query(query, doc_id=None):
         
     except Exception as e:
         return f"RAG query failed: {str(e)}", {"error": str(e)}
+    

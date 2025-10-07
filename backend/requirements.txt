@@ -37,3 +37,6 @@ pandas>=2.2.3
 
 python-multipart
 google-search-results
+langchain-huggingface
+langchain-chroma
+
