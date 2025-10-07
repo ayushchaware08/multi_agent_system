@@ -3,3 +3,32 @@ venv/
 __pycache__/
 vertorstore/
 *.pyc
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+*.egg-info/
+
+# Environment
+.env
+.env.local
+
+# IDE
+.vscode/
+.idea/
+
+# Data
+data/
+*.pdf
+*.db
+
+# Models cache
+.cache/
+models/
+
+# Logs
+*.log

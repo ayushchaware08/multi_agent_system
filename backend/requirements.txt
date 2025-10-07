@@ -8,13 +8,14 @@ langchain==0.3.4
 langchain-core==0.3.13
 langchain-community==0.3.3
 langchain-groq>=0.1.9
-# OpenAI packages removed per project policy (use HuggingFace embeddings and Groq for LLM)
 
 # === Vector Store + Embeddings ===
-tiktoken>=0.7.0
 chromadb>=0.5.3
-sentence-transformers>=2.2.2
-tiktoken>=0.7.0
+sentence-transformers>=2.7.0
+huggingface-hub==0.23.0
+transformers==4.41.0
+torch==2.3.0 --index-url https://download.pytorch.org/whl/cpu
+faiss-cpu
 
 # === PDF Processing ===
 PyMuPDF>=1.24.9
@@ -33,23 +34,5 @@ requests>=2.32.3
 aiofiles>=24.1.0
 numpy>=1.26.4
 pandas>=2.2.3
-
-
 python-multipart
 google-search-results
-langchain-huggingface
-langchain-chroma
-faiss-cpu
-# pip install torch==2.1.0 --index-url https://download.pytorch.org/whl/cpu
-# pip install transformers==4.35.0
-# pip install sentence-transformers==2.2.2
-
-
-# Uninstall all conflicting packages
-# pip uninstall sentence-transformers huggingface-hub transformers torch torchvision -y
-
-# # Install compatible versions together
-# pip install sentence-transformers==2.7.0
-# pip install huggingface-hub==0.23.0
-# pip install transformers==4.41.0
-# pip install torch==2.3.0 --index-url https://download.pytorch.org/whl/cpu
