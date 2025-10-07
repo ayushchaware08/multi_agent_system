@@ -29,16 +29,15 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# CRITICAL: Pre-load embedding model on startup
+# Pre-load embedding model on startup
 @app.on_event("startup")
 async def startup_event():
     """
     Pre-load embedding model to avoid first-upload delay.
-    This downloads the model once on startup (if not cached).
     """
     logger.info("="*60)
     logger.info("🔄 PRE-LOADING EMBEDDING MODEL...")
-    logger.info("⏳ This may take 1-2 minutes on first run (downloading 133MB)")
+    logger.info("⏳ This may take 1-2 minutes on first run")
     logger.info("="*60)
     
     try:
@@ -47,7 +46,7 @@ async def startup_event():
         # Load model (will download if not cached)
         embeddings = get_embeddings()
         
-        # Test it works
+        # Test it works (HuggingFaceEmbeddings has embed_query method)
         test_embedding = embeddings.embed_query("test")
         
         logger.info("="*60)
@@ -56,8 +55,10 @@ async def startup_event():
         logger.info("="*60)
         
     except Exception as e:
+        import traceback
         logger.error("="*60)
         logger.error(f"❌ FAILED TO PRE-LOAD EMBEDDING MODEL: {e}")
+        logger.error(traceback.format_exc())
         logger.error("⚠️  Uploads may be slow or fail!")
         logger.error("="*60)
 
@@ -75,10 +76,12 @@ async def health():
     """Health check with model status"""
     try:
         from app.agents.pdf_rag import get_embeddings
-        get_embeddings()  # Check if model is loaded
+        embeddings = get_embeddings()
+        # Quick test
+        embeddings.embed_query("test")
         return {"status": "healthy", "embedding_model": "loaded"}
-    except:
-        return {"status": "degraded", "embedding_model": "not_loaded"}
+    except Exception as e:
+        return {"status": "degraded", "embedding_model": f"error: {str(e)}"}
 
 logger.info("✅ All routers registered")
 logger.info("✅ Backend initialization complete")

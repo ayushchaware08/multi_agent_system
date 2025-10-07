@@ -78,7 +78,7 @@ st.sidebar.markdown("""
 - Backend: FastAPI server with multiple agents
 - Agents: Arxiv search, PDF RAG, Web search (SerpAPI)
 - LLM: Groq LLM for routing and responses
-- Vector Store: ChromaDB for PDF embeddings
+- Vector Store: FAISS for PDF Vector embeddings
 """)
 
 query = st.text_input("Enter your question", "")

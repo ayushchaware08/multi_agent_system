@@ -39,4 +39,17 @@ python-multipart
 google-search-results
 langchain-huggingface
 langchain-chroma
+faiss-cpu
+# pip install torch==2.1.0 --index-url https://download.pytorch.org/whl/cpu
+# pip install transformers==4.35.0
+# pip install sentence-transformers==2.2.2
 
+
+# Uninstall all conflicting packages
+# pip uninstall sentence-transformers huggingface-hub transformers torch torchvision -y
+
+# # Install compatible versions together
+# pip install sentence-transformers==2.7.0
+# pip install huggingface-hub==0.23.0
+# pip install transformers==4.41.0
+# pip install torch==2.3.0 --index-url https://download.pytorch.org/whl/cpu

@@ -39,6 +39,14 @@ class Controller:
         logger.info(f"📄 pdf_doc_id: {pdf_doc_id}, prefer_agent: {prefer_agent}")
         
         t = text.lower().strip()
+
+        # Auto-route to PDF_RAG if documents exist
+        from app.agents.pdf_rag import _vectorstore
+        if _vectorstore is not None and _vectorstore.index.ntotal > 0:
+            doc_count = _vectorstore.index.ntotal
+            logger.info(f"📚 {doc_count} chunks in FAISS - auto-routing to PDF_RAG")
+            return "PDF_RAG", f"PDF document available ({doc_count} chunks). Answering from uploaded PDF."
+
         
         # User preference override
         if prefer_agent:
