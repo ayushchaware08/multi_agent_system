@@ -23,7 +23,7 @@ env/
 
 # Data
 data/
-*.pdf
+# *.pdf
 *.db
 
 # Models cache

@@ -1,10 +1,12 @@
  # Multi-Agent System 🤖
 
-<!-- Deployed Link: [Multi-Agent System Deployment](https://multi-agent-system-frontend.onrender.com) -->
 
 A sophisticated multi-agent AI system that intelligently routes user queries to specialized agents for optimal answers. The system combines PDF processing, academic research, and web search capabilities with intelligent routing powered by Groq LLM.
 
-<!-- 
+Live Demo
+- Backend API: https://multi-agent-backend-n3bp.onrender.com
+- Frontend UI: https://multi-agent-system-frontend.onrender.com
+
 
 ## 🏢 Project Structure
 
@@ -72,6 +74,7 @@ multi_agent_system/
   - Batch processing for large documents (prevents hanging)
   - Vector similarity search with metadata filtering
   - Document-specific or global PDF search
+
 ![alt text](</other/Screenshot 2025-10-08 031425.png>)
 
 
@@ -84,7 +87,8 @@ multi_agent_system/
   - Comprehensive paper analysis with structured output
   - Research trend identification
   - Direct ArXiv links and paper recommendations
-![alt text](</other/Screenshot 2025-10-07 190422.png>)
+
+![alt text](<other/Screenshot 2025-10-08 192607.png>)
 
 #### 3. Web Search Agent 🌐
 - **Purpose**: Current information and general web queries
@@ -94,7 +98,8 @@ multi_agent_system/
   - Multi-source information synthesis
   - Structured answer generation
   - Source attribution and transparency
-![alt text](</other/Screenshot 2025-10-07 190246.png>)
+
+![alt text](<other/Screenshot 2025-10-08 192457.png>)
 
 ## 🔗 API Documentation
 
@@ -223,9 +228,9 @@ LOG_FILE=logs/decision_logs.jsonl
 FASTAPI_HOST=0.0.0.0
 FASTAPI_PORT=8000
 ``` 
--->
 
-<!-- ## 🔗 API Documentation
+
+ ## 🔗 API Documentation
 
 ### Core Endpoints
 
@@ -291,9 +296,8 @@ Response:
   "status": "healthy",
   "embedding_model": "loaded"
 }
-``` -->
-
-<!-- ### Additional Endpoints
+``` 
+ ### Additional Endpoints
 
 - `GET /upload/list` - List all uploaded documents
 - `DELETE /upload/{doc_id}` - Delete uploaded document
@@ -334,6 +338,12 @@ Query: "Compare recent AI safety papers with regulations mentioned in my uploade
 ## 🚀 Deployment
 Production Deployment on Render
 This application is deployed on Render with separate services for backend and frontend.
+Steps: 
+1. Containerized the FastAPI backend using Docker. 
+2. Linked the GitHub repository to Render for CI/CD integration. 
+3. Configured environment variables for API keys and secrets. 
+4. Set the web service to auto-deploy on main branch updates. 
+5. Utilized Render’s autoscaling and HTTPS configuration.
 
 Live Demo
 - Backend API: https://multi-agent-backend-n3bp.onrender.com
@@ -345,4 +355,3 @@ Live Demo
 MIT License - see [LICENSE](LICENSE) file for details.
 
 **Made by [ayushchaware08](https://github.com/ayushchaware08)**
--->
