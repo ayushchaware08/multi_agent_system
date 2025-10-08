@@ -30,9 +30,9 @@ def get_embeddings():
     """Get HuggingFace embeddings (compatible with FAISS)"""
     logger.info("🔄 Loading embedding model...")
     embeddings = HuggingFaceEmbeddings(
-        model_name='all-MiniLM-L6-v2',
+        # model_name='all-MiniLM-L6-v2',
+        model_name='paraphrase-MiniLM-L3-v2',
         model_kwargs={'device': 'cpu'}
-        # Removed encode_kwargs to avoid conflicts
     )
     logger.info("✅ Embedding model loaded")
     return embeddings
