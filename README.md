@@ -6,7 +6,25 @@ A sophisticated multi-agent AI system that intelligently routes user queries to 
 Live Demo
 - Backend API: https://multi-agent-backend-n3bp.onrender.com
 - Frontend UI: https://multi-agent-system-frontend.onrender.com
+Video Demo: https://youtu.be/Iu5QKyXwKVk
 
+## 🛠️ Technical Details
+
+### Key Technologies
+
+- **Backend Framework**: FastAPI (async/await, automatic OpenAPI docs)
+- **Frontend**: Streamlit (rapid prototyping, file uploads)
+- **LLM**: Groq (fast inference, multiple models)
+- **Integration Framework**: LangChain (document processing, agent orchestration)
+- **Vector Database**: FAISS
+- **Embeddings**: HuggingFace Transformers (local, no API costs)
+- **PDF Processing**: PyMuPDF (fast, reliable text extraction)
+- **Web Search**: SerpAPI (Google Search API)
+- **Academic Search**: ArXiv API (open academic papers)
+
+
+## 🏗️ System Architecture
+![alt text](other/diagram-export-10-8-2025-3_42_20-AM.png)
 
 ## 🏢 Project Structure
 
@@ -37,24 +55,13 @@ multi_agent_system/
 │   └── streamlit_app.py        # User interface
 ├── logs/                       # System logs
 │   └── decision_logs.jsonl     # Agent routing decisions
+├── sample_pdf/                 # sample pdf to test RAG
+│   └──.pdf file
+├── .gitignore                  # Git ignore patterns
+├── REPORT.pdf                  # Project report
+├── render.yaml                 # Render deployment config
 └── README.md                   # This file
 ```
-## 🏗️ System Architecture
-![alt text](other/diagram-export-10-8-2025-3_42_20-AM.png)
-
-## 🛠️ Technical Details
-
-### Key Technologies
-
-- **Backend Framework**: FastAPI (async/await, automatic OpenAPI docs)
-- **Frontend**: Streamlit (rapid prototyping, file uploads)
-- **LLM**: Groq (fast inference, multiple models)
-- **Vector Database**: FAISS
-- **Embeddings**: HuggingFace Transformers (local, no API costs)
-- **PDF Processing**: PyMuPDF (fast, reliable text extraction)
-- **Web Search**: SerpAPI (Google Search API)
-- **Academic Search**: ArXiv API (open academic papers)
-
 ### Performance Optimizations
 
 1. **Batch Processing**: Large PDFs processed in chunks to prevent hanging
