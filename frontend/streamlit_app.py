@@ -81,6 +81,26 @@ st.sidebar.markdown("""
 - Vector Store: FAISS for PDF Vector embeddings
 """)
 
+# Set API root to the deployed backend
+API_ROOT = "https://multi-agent-backend-n3bp.onrender.com"
+
+# Add a button to wake up the backend (useful for free tier deployments that go to sleep)
+if st.sidebar.button("Wake Up Backend"):
+    with st.spinner("Waking up backend..."):
+        try:
+            response = requests.get(f"{API_ROOT}/health", timeout=30)
+            if response.status_code == 200:
+                st.sidebar.success("✅ Backend is awake!")
+            else:
+                st.sidebar.warning("⚠️ Backend responded but may have issues")
+        except requests.exceptions.RequestException as e:
+            st.sidebar.error(f"❌ Failed to wake backend: {e}")
+
+# Add GitHub repo link
+st.sidebar.markdown("---")
+st.sidebar.markdown("### 📂 Source Code")
+st.sidebar.markdown("[View on GitHub](https://github.com/ayushchaware08/multi_agent_system)")
+
 query = st.text_input("Enter your question", "")
 
 # search suggestions
