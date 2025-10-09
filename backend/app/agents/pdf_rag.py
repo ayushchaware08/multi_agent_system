@@ -1,7 +1,3 @@
-"""
-PDF RAG Agent - Using FAISS (Fixed)
-"""
-
 from langchain.chains import RetrievalQA
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.schema import Document
@@ -21,10 +17,7 @@ GROQ_KEY = os.getenv("GROQ_API_KEY")
 # Global in-memory FAISS vector store
 _vectorstore = None
 
-# ============================================================================
-# EMBEDDINGS - Fixed Configuration
-# ============================================================================
-
+# embedding
 @lru_cache(maxsize=1)
 def get_embeddings():
     """Get HuggingFace embeddings (compatible with FAISS)"""
@@ -37,10 +30,7 @@ def get_embeddings():
     logger.info("✅ Embedding model loaded")
     return embeddings
 
-# ============================================================================
-# PDF PROCESSING
-# ============================================================================
-
+# pdf parse
 def extract_text_from_pdf(pdf_path):
     """Extract all text from PDF"""
     doc = fitz.open(pdf_path)
@@ -74,10 +64,7 @@ def chunk_text(text, doc_id):
     
     return documents
 
-# ============================================================================
-# INGESTION - FAISS
-# ============================================================================
-
+# FAISS INGESTION
 def ingest_pdf_to_chroma(pdf_path, doc_id):
     """
     Ingest PDF using FAISS vector store
@@ -133,10 +120,8 @@ def ingest_pdf_to_chroma(pdf_path, doc_id):
         logger.error("="*60)
         return {"status": "error", "message": str(e)}
 
-# ============================================================================
-# QUERYING - FAISS
-# ============================================================================
 
+# RAG QUERY
 def run_pdf_rag_query(query, doc_id=None):
     """
     Query the FAISS vector database with RAG
