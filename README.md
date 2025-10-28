@@ -51,7 +51,7 @@ multi_agent_system/
 │   ├── .env.example            # Environment template
 │   └── data/                   # Data storage
 │       ├── uploads/            # Uploaded PDFs
-│       └── vectorstore/        # ChromaDB storage
+│       └── vectorstore/        # FAISS storage
 ├── frontend/                   # Streamlit Frontend
 │   └── streamlit_app.py        # User interface
 ├── logs/                       # System logs
@@ -75,7 +75,7 @@ multi_agent_system/
 
 #### 1. PDF RAG Agent 📄
 - **Purpose**: Answer questions about uploaded PDF documents
-- **Technology**: LangChain + ChromaDB + HuggingFace Embeddings
+- **Technology**: LangChain + FAISS + HuggingFace Embeddings
 - **Features**:
   - PDF text extraction using PyMuPDF
   - Intelligent text chunking with overlap
