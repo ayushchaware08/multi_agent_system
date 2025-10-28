@@ -87,16 +87,12 @@ API_ROOT = "https://multi-agent-backend-n3bp.onrender.com"
 # Add a button to wake up the backend (useful for free tier deployments that go to sleep)
 if st.sidebar.button("Wake Up Backend"):
     with st.spinner("Waking up backend..."):
-        try:
-            response = requests.get(f"{API_ROOT}/health", timeout=60)
-            if response.status_code == 200:
-                st.sidebar.success("✅ Backend is awake!")
-            else:
-                st.sidebar.warning("⚠️ Backend responded with issues")
-        except requests.exceptions.Timeout:
-            st.sidebar.warning("⚠️ Backend is taking longer than usual. Please try again.")
-        except requests.exceptions.RequestException:
-            st.sidebar.error("⚠️ Backend may be down.")
+        response = requests.get(f"{API_ROOT}/health", timeout=60)
+        if response.status_code == 200:
+            st.sidebar.success("✅ Backend is awake!")
+        else:
+            st.sidebar.warning("⚠️ wake up backend here https://multi-agent-backend-n3bp.onrender.com")
+        
 
 # Add GitHub repo link
 st.sidebar.markdown("---")
