@@ -4,10 +4,12 @@
 A sophisticated multi-agent AI system that intelligently routes user queries to specialized agents for optimal answers. The system combines PDF processing, academic research, and web search capabilities with intelligent routing powered by Groq LLM.
 
 Live Demo
-- Backend API: https://multi-agent-backend-n3bp.onrender.com
-- Frontend UI: https://multi-ai-agent-system-ayush.streamlit.app/
+https://multi-agent-system-eosin.vercel.app/
 
 Video Demo: https://youtu.be/Iu5QKyXwKVk
+
+![alt text](other/image.png)
+
 
 ## 🛠️ Technical Details
 
@@ -83,7 +85,7 @@ multi_agent_system/
   - Vector similarity search with metadata filtering
   - Document-specific or global PDF search
 
-![alt text](</other/Screenshot 2025-10-08 031425.png>)
+<!-- ![alt text](</other/Screenshot 2025-10-08 031425.png>) -->
 
 
 #### 2. ArXiv Research Agent 📚
@@ -96,7 +98,7 @@ multi_agent_system/
   - Research trend identification
   - Direct ArXiv links and paper recommendations
 
-![alt text](<other/Screenshot 2025-10-08 192607.png>)
+<!-- ![alt text](<other/Screenshot 2025-10-08 192607.png>) -->
 
 #### 3. Web Search Agent 🌐
 - **Purpose**: Current information and general web queries
@@ -107,7 +109,7 @@ multi_agent_system/
   - Structured answer generation
   - Source attribution and transparency
 
-![alt text](<other/Screenshot 2025-10-08 192457.png>)
+<!-- ![alt text](<other/Screenshot 2025-10-08 192457.png> -->
 
 ## 🔗 API Documentation
 

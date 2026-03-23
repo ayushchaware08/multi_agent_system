@@ -45,5 +45,5 @@ async def health():
     """Health check"""
     return {"status": "healthy", "message": "Service is running"}
 
-logger.info("✅ All routers registered")
+logger.info("✅' All routers registered")
 logger.info("✅ Backend initialization complete")

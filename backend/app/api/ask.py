@@ -16,7 +16,6 @@ class AskRequest(BaseModel):
     pdf_doc_id: str = None   # optional: reference to uploaded PDF
     prefer_agent: str = None
 
-
 @router.post("/")
 async def ask(req: AskRequest):
     """

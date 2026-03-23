@@ -32,3 +32,6 @@ models/
 
 # Logs
 *.log
+
+
+./frontend

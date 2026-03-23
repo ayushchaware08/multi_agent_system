@@ -3,6 +3,7 @@ import json
 import logging
 from langchain_groq import ChatGroq
 from app.utils.logging_utils import append_raw_log
+from app.agents.pdf_rag import _vectorstore
 
 logger = logging.getLogger(__name__)
 
@@ -40,33 +41,68 @@ class Controller:
         
         t = text.lower().strip()
 
-        # Auto-route to PDF_RAG if documents exist
-        # from app.agents.pdf_rag import _vectorstore
-        # if _vectorstore is not None and _vectorstore.index.ntotal > 0:
-        #     doc_count = _vectorstore.index.ntotal
-        #     logger.info(f"📚 {doc_count} chunks in FAISS - auto-routing to PDF_RAG")
-        #     return "PDF_RAG", f"PDF document available ({doc_count} chunks). Answering from uploaded PDF."
+        has_uploaded_pdf = _vectorstore is not None and _vectorstore.index.ntotal > 0
 
-        
-        # User preference override
+        research_keywords = [
+            "arxiv",
+            "research paper",
+            "research papers",
+            "paper on",
+            "papers on",
+            "latest research",
+            "find papers",
+            "academic paper",
+            "peer reviewed"
+        ]
+        pdf_keywords = [
+            "pdf",
+            "document",
+            "uploaded file",
+            "uploaded pdf",
+            "this file",
+            "this document",
+            "in the document",
+            "from the document",
+            "summarize",
+            "summary"
+        ]
+        web_keywords = [
+            "news",
+            "latest",
+            "current",
+            "today",
+            "web",
+            "search",
+            "internet",
+            "out of context",
+            "who",
+            "what",
+            "when",
+            "where"
+        ]
+
+        # 1) Research-paper intent -> ARXIV
+        if any(word in t for word in research_keywords):
+            logger.info("✅ Rule matched: ARXIV")
+            return "ARXIV", "Rule: research-paper intent detected"
+
+        # 2) PDF-related intent -> PDF_RAG only if PDF context exists
+        pdf_intent = any(word in t for word in pdf_keywords)
+        if pdf_intent and (pdf_doc_id or has_uploaded_pdf):
+            logger.info("✅ Rule matched: PDF_RAG")
+            return "PDF_RAG", "Rule: PDF intent with uploaded PDF context"
+
+        # 3) General/out-of-context web intent -> WEB_SEARCH
+        if any(word in t for word in web_keywords):
+            logger.info("✅ Rule matched: WEB_SEARCH")
+            return "WEB_SEARCH", "Rule: general web or out-of-context intent"
+
+        # 4) Optional user override only when no deterministic rule matched
         if prefer_agent:
             reason = f"User requested agent {prefer_agent}"
             decision = prefer_agent.upper()
             logger.info(f"✅ Using preferred agent: {decision}")
             return decision, reason
-
-        # Fast rule-based routing
-        if pdf_doc_id or "pdf" in t or "analyze this document" in t or "summarize" in t:
-            logger.info("✅ Rule matched: PDF_RAG")
-            return "PDF_RAG", "Rule: contains PDF reference or pdf_doc_id supplied"
-        
-        if any(word in t for word in ["recent paper", "arxiv", "paper on", "latest research"]):
-            logger.info("✅ Rule matched: ARXIV")
-            return "ARXIV", "Rule: user asked specifically about papers or arXiv"
-        
-        if any(word in t for word in ["who", "what", "when", "where", "news", "search", "current"]):
-            logger.info("✅ Rule matched: WEB_SEARCH")
-            return "WEB_SEARCH", "Rule: general web query indicators"
 
         # Fallback to LLM for nuanced decision
         logger.info("🤖 No rule matched, falling back to LLM routing...")
