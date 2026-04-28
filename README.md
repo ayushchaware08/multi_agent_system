@@ -3,10 +3,9 @@
 
 A sophisticated multi-agent AI system that intelligently routes user queries to specialized agents for optimal answers. The system combines PDF processing, academic research, and web search capabilities with intelligent routing powered by Groq LLM.
 
-Live Demo
-https://multi-agent-system-eosin.vercel.app/
+## Live : https://multi-agent-system-eosin.vercel.app/
 
-Video Demo: https://youtu.be/Iu5QKyXwKVk
+## Video Demo: https://youtu.be/Iu5QKyXwKVk
 
 ![alt text](other/image.png)
 

@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 import os
+import sys
 import logging
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -15,7 +16,11 @@ load_dotenv(dotenv_path=env_path)
 logger.info(f"📂 Loaded .env from: {env_path}")
 
 # Import routers
-from .api import ask, upload, logs
+# When launched from backend/app with `uvicorn main:app`, add backend root to import path
+if __package__ in (None, ""):
+    sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
+from app.api import ask, upload, logs
 
 # Create app
 app = FastAPI(title="Multi-Agent Dynamic Decision System")

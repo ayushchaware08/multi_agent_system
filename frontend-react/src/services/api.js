@@ -1,7 +1,8 @@
 import axios from 'axios'
 
 // Make sure this matches your backend URL
-const API_BASE_URL = 'https://localhost:800'|| 'http://127.0.0.1:8000/'||'https://multi-agent-backend-n3bp.onrender.com/'
+// const API_BASE_URL = 'http://localhost:8000'|| 'http://127.0.0.1:8000/'
+const API_BASE_URL = 'http://localhost:8000'|| 'http://127.0.0.1:8000/'||'https://multi-agent-backend-n3bp.onrender.com/'
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -21,7 +22,7 @@ const getApiErrorMessage = (error) => {
   if (error.response?.data?.message) return error.response.data.message
   if (error.code === 'ECONNABORTED') return 'Request timed out'
   if (error.message === 'Network Error') return 'Cannot reach backend server'
-  return error.message || 'Unexpected API error'
+  return error.message || 'Unexpected API error'  
 }
 
 api.interceptors.response.use(
